@@ -1,0 +1,15 @@
+{
+  "name"         : "mailnaut",
+  "version"      : "0.0.1",
+  "description"  : "A small web app to make managing Email Marketing a little easier",
+  "main"         : "mailnaut.js",
+  "author"       : "Beau Watson <DocWatson>",
+  "dependencies" : {
+    "cheerio"    : "latest",
+    "express"	 : "latest",
+    "mkdirp"     : "latest",
+    "jade"		 : "latest",
+    "string"   : "latest",
+    "zipstream"  : "latest"
+  }
+}

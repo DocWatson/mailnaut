@@ -1,0 +1,27 @@
+doctype html
+html
+	head
+		title #{title} | MailNaut
+		link(rel='stylesheet', href='/css/fontello.css')
+		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
+		link(rel='stylesheet', href='/css/style.css')
+	body
+		include includes/header
+		section.wrapper
+			.left-col
+				h2 Create Plaintext Version
+				form
+					fieldset
+						input(type="file", value="Upload HTML File").file-upload
+
+						input(type="submit", value="Launch Link Check").launch
+
+						label(for="output") Plaintext Output:
+						textarea(rows=100, cols=75)#output
+
+			.right-col
+				h3 How to Use
+				ol
+					li Upload HTML File
+					li MailNaut will remove all HTML and create a plaintext version
+					li Download your .txt file
