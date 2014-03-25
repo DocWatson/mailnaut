@@ -5,19 +5,21 @@ html
 		link(rel='stylesheet', href='/css/fontello.css')
 		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
 		link(rel='stylesheet', href='/css/style.css')
+		script(type='text/javascript' src='/bower_components/jquery/dist/jquery.min.js')
+		script(type='text/javascript', src='/js/scripts.js')
 	body
 		include includes/header
 		section.wrapper
 			.left-col
 				h2 Create Plaintext Version
-				form
+				form(action="/plaintext/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="plaintext")
 					fieldset
-						input(type="file", value="Upload HTML File").file-upload
+						input(type="file", name="htmlUpload" value="Upload HTML File").file-upload
 
-						input(type="submit", value="Launch Link Check").launch
+						input(type="submit", value="Generate Plaintext Version").launch
 
 						label(for="output") Plaintext Output:
-						textarea(rows=100, cols=75)#output
+						textarea(rows=50, cols=75)#output
 
 			.right-col
 				h3 How to Use

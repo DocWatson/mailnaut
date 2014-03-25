@@ -5,12 +5,14 @@ html
 		link(rel='stylesheet', href='/css/fontello.css')
 		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
 		link(rel='stylesheet', href='/css/style.css')
+		script(type='text/javascript' src='/bower_components/jquery/dist/jquery.min.js')
+		script(type='text/javascript', src='/js/scripts.js')
 	body
 		include includes/header
 		section.wrapper
 			.left-col
 				h2 Check Links
-				form
+				form(action="/linkcheck/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="linkcheck")
 					fieldset
 						input(type="file", value="Upload HTML File").file-upload
 
