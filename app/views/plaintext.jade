@@ -14,12 +14,13 @@ html
 				h2 Create Plaintext Version
 				form(action="/plaintext/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="plaintext")
 					fieldset
-						input(type="file", name="htmlUpload" value="Upload HTML File").file-upload
+						input(type="file", name="htmlUpload", value="Upload HTML File").file-upload
 
 						input(type="submit", value="Generate Plaintext Version").launch
 
-						label(for="output") Plaintext Output:
-						textarea(rows=50, cols=75)#output
+						if (output)
+							label(for="output") Plaintext Output:
+							textarea(rows=50, cols=75)#output #{output}
 
 			.right-col
 				h3 How to Use

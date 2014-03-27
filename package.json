@@ -9,7 +9,7 @@
     "express"	 : "latest",
     "mkdirp"     : "latest",
     "jade"		 : "latest",
-    "string"   : "latest",
+    "string"     : "latest",
     "zipstream"  : "latest"
   }
 }

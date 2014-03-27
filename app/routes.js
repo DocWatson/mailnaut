@@ -1,15 +1,27 @@
-var fs      = require('fs');
-var path    = require('path');	
-var cheerio = require('cheerio');	
-var mkdirp  = require('mkdirp');
-var S       = require('string');
+var fs        = require('fs');
+var path      = require('path');	
+var cheerio   = require('cheerio');	
+var mkdirp    = require('mkdirp');
+var S         = require('string');
+var zipstream = require('zipstream');
+
+
+//Extend arrays so we can remove empty values
+Array.prototype.clean = function(deleteValue) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == deleteValue) {         
+      this.splice(i, 1);
+      i--;
+    }
+  }
+  return this;
+};
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
 
 	// api ---------------------------------------------------------------------
-	// TODO: add the methods to make this thing actually work.
-	app.post('/plaintext/generate', function(req, res){
+	app.post('/linkcheck/generate', function(req, res){
 		//console.log(req.files.htmlUpload);
 
 		//Read the uploaded file
@@ -17,11 +29,50 @@ module.exports = function(app) {
 			//load cheerio
 		    var $ = cheerio.load(data);
 		    // Get the title of the email
-		    var subject = $('title').text();
-
+		    var links = [];
+		    var href  = "";
+		    var text  = "";
 		    //walk over all the links and put their HREFs in line 
 		    $('a').each(function(){
-		    	$(this).text($(this).text() + ' ['+$(this).attr('href')+']');
+		    	// get the link and the text
+		    	href = $(this).attr('href');
+		    	text = $(this).text();
+
+		    	//we do NOT want to exlude empty href values as we want to see if we missed configuring one
+		    	links.push('['+href+'] '+ text);
+		    	
+		    });
+
+		    //clean up any empty elements in the array
+		    links.clean(undefined);
+		    links.clean('');
+		   
+		   	//format the output
+		   	var output = links.join("\r\n");
+
+		   	//TODO: Add check to see if mobile viewport tag is included
+		   	//TODO: Add check to see if the style tag is in the head or body
+
+		    //write the output
+		    res.render('linkcheck', {title: 'Review Links', output: output});
+		});
+	});
+
+	app.post('/plaintext/generate', function(req, res){
+
+		//Read the uploaded file
+		fs.readFile(req.files.htmlUpload.path, function (err, data) {
+			//load cheerio
+		    var $ = cheerio.load(data);
+		    // Get the title of the email
+		    var subject = $('title').text();
+		    var href    = '';
+		    //walk over all the links and put their HREFs in line 
+		    $('a').each(function(){
+		    	href = $(this).attr('href');
+		    	if (href != '') {
+		    		$(this).text($(this).text() + ' ['+href+']');
+		    	}
 		    });
 
 		    //get the final body copy after links have been prepared
@@ -34,17 +85,27 @@ module.exports = function(app) {
 		  	// Replace special chars to something a little cleaner
 		  	output = S(output).replaceAll('&copy;', '(C)').s;
 		  	output = S(output).replaceAll('&reg;', '(R)').s;
+		  	output = S(output).replaceAll('&trade;', 'TM').s;
 		  	output = S(output).replaceAll('&nbsp;', ' ').s;
 
 		  	// Try to format properly
 		  	output = output.replace(/\s{4}/g,"\r\n");
 		  	
 
-		  	//output = output.replace(/`+/g,"\r\n\r\n");
-		    console.log(output);
+		    //write the output
+		    res.render('plaintext', {title: 'Plaintext Generated', output: output});
+		});
+	});
+
+	app.post('/utm/generate', function(req, res){
+
+		//Read the uploaded file
+		fs.readFile(req.files.htmlUpload.path, function (err, data) {
+			
+		  	
 
 		    //write the output
-		    res.send(output);
+		    //res.render('plaintext', {title: 'Plaintext Generated', output: output});
 		});
 	});
 

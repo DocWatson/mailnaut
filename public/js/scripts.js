@@ -1,4 +1,8 @@
 var Mailnaut = {
+	addVendor : function() {
+
+	},
+
 	init: function () {
 		//get the form
 		Mailnaut.targetForm   = $('form[name="mailnautForm"]');
@@ -8,7 +12,7 @@ var Mailnaut = {
 
 		Mailnaut.targetForm.submit(function (event) {
 			//prevent default submit event
-            event.preventDefault();
+            //event.preventDefault();
             //run the desired action for each form type
             switch (Mailnaut.formFunction) {
             	case 'plaintext':
@@ -37,10 +41,21 @@ var Mailnaut = {
 
 	processLinkcheck: function () {
 		console.log('Executing Link Check');
+		$.post(Mailnaut.formAction, Mailnaut.targetForm.serialize(), function(response){
+			//console.log(responses);
+		});
 	},
 
 	processUTM: function () {
-		console.log('Executing UTM check');
+		$.post(Mailnaut.formAction, Mailnaut.targetForm.serialize(), function(response){
+			//console.log(responses);
+		});
+	},
+
+	removeVendor: function() {
+		$('.remove').on('click', function(e){
+			e.preventDefault();
+		});
 	}
 }
 
