@@ -16,14 +16,16 @@ html
 					fieldset
 						input(type="file", value="Upload HTML File").file-upload
 						h3 Specify vendors
-						div.vendor
-							label Vendor Name
-								br
-								input(type="text", placeholder="Vendor Name", name="vendor_name[]")
-							label Subject line
-								br
-								input(type="text", placeholder="Enter a subject line specific to this vendor", name="vendor_subject[]")
-							a(href#).remove remove
+						div.vendor-list
+							div.vendor
+								label Vendor Name
+									br
+									input(type="text", placeholder="Vendor Name", name="vendor_name[]")
+								label Subject line
+									br
+									input(type="text", placeholder="Enter a subject line specific to this vendor", name="vendor_subject[]")
+								a(href="#").remove-vendor
+									i.icon-cancel-circled2 remove
 						input(type="button", value="Add Another Vendor").add-vendor
 
 

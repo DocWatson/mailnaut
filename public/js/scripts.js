@@ -1,7 +1,6 @@
 var Mailnaut = {
-	addVendor : function() {
 
-	},
+	vendorTemplate: "<div class=\"vendor\"><label>Vendor Name<br><input type=\"text\" /></label><label>Subject Line<br><input type=\"text\" /></label><a href=\"#\" class=\"remove-vendor\"><i class=\"icon-cancel-circled2\">remove</i></a></div>",
 
 	init: function () {
 		//get the form
@@ -10,24 +9,27 @@ var Mailnaut = {
 		Mailnaut.formAction   = Mailnaut.targetForm.attr('action');
 		Mailnaut.formFunction = Mailnaut.targetForm.attr('rel');
 
-		Mailnaut.targetForm.submit(function (event) {
-			//prevent default submit event
-            //event.preventDefault();
-            //run the desired action for each form type
-            switch (Mailnaut.formFunction) {
-            	case 'plaintext':
-            		Mailnaut.processPlaintext();
-            		break;
-            	case 'utm':
-            		Mailnaut.processUTM();
-            		break;
-            	case 'linkcheck':
-            		Mailnaut.processLinkcheck();
-            		break;
-            	default :
-            		console.log("No action specified");
-            }
-        });
+		switch (Mailnaut.formFunction) {
+        	case 'plaintext':
+        		Mailnaut.targetForm.submit(function (e) {
+        			Mailnaut.processPlaintext();
+        		});
+        		break;
+        	case 'utm':
+        		Mailnaut.setupVendorControls();
+
+        		Mailnaut.targetForm.submit(function (e) {
+        			Mailnaut.processUTM();
+        		});
+        		break;
+        	case 'linkcheck':
+        		Mailnaut.targetForm.submit(function (e) {
+        			Mailnaut.processLinkcheck();
+        		});
+        		break;
+        	default :
+        		console.log("No action specified");
+        }
 	},
 
 	processPlaintext: function () {
@@ -52,9 +54,15 @@ var Mailnaut = {
 		});
 	},
 
-	removeVendor: function() {
-		$('.remove').on('click', function(e){
+	setupVendorControls: function() {
+		$('.add-vendor').click(function(e){
 			e.preventDefault();
+			$('.vendor-list').append(Mailnaut.vendorTemplate);
+		});
+
+		$('.vendor-list').on('click', '.remove-vendor', function(e){
+			e.preventDefault();
+			$(this).parent().remove();
 		});
 	}
 }

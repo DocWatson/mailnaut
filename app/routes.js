@@ -1,9 +1,9 @@
-var fs        = require('fs');
-var path      = require('path');	
-var cheerio   = require('cheerio');	
-var mkdirp    = require('mkdirp');
-var S         = require('string');
-var zipstream = require('zipstream');
+var fs         = require('fs');
+var path       = require('path');	
+var cheerio    = require('cheerio');	
+var mkdirp     = require('mkdirp');
+var htmlToText = require('html-to-text');
+var zipstream  = require('zipstream');
 
 
 //Extend arrays so we can remove empty values
@@ -72,25 +72,16 @@ module.exports = function(app) {
 		    	href = $(this).attr('href');
 		    	if (href != '') {
 		    		$(this).text($(this).text() + ' ['+href+']');
+		    	} else {
+		    		$(this).text($(this).text() + ' [MISSING-LINK]');
 		    	}
 		    });
 
 		    //get the final body copy after links have been prepared
 		  	var body    = $('body').html();
 
-		  	// Strip the tags
-		  	body = S(body).collapseWhitespace();
-		  	var output = S(body).stripTags().s;
-		  	
-		  	// Replace special chars to something a little cleaner
-		  	output = S(output).replaceAll('&copy;', '(C)').s;
-		  	output = S(output).replaceAll('&reg;', '(R)').s;
-		  	output = S(output).replaceAll('&trade;', 'TM').s;
-		  	output = S(output).replaceAll('&nbsp;', ' ').s;
-
-		  	// Try to format properly
-		  	output = output.replace(/\s{4}/g,"\r\n");
-		  	
+		  	//convert to plain text
+		  	var output = htmlToText.fromString(body);
 
 		    //write the output
 		    res.render('plaintext', {title: 'Plaintext Generated', output: output});
