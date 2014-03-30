@@ -121,6 +121,10 @@ module.exports = function(app) {
 		res.render('linkcheck', { title : 'Check the Links', section : 'linkcheck' } );
 	});
 
+	app.get('/vendor', function(req, res) {
+		res.render('includes/vendor');
+	});
+
 	// All other requests, send 404
 	app.get('*', function(req, res) {
 		res.render('404', { title : 'We Have a Problem', section : '404' } );

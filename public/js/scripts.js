@@ -1,6 +1,11 @@
 var Mailnaut = {
-
-	vendorTemplate: "<div class=\"vendor\"><label>Vendor Name<br><input type=\"text\" /></label><label>Subject Line<br><input type=\"text\" /></label><a href=\"#\" class=\"remove-vendor\"><i class=\"icon-cancel-circled2\">remove</i></a></div>",
+	displayVendorRemove : function() {
+		if( $('.remove-vendor').length > 1 ) {
+			$('.remove-vendor').show();
+		} else {
+			$('.remove-vendor').hide();
+		}
+	},
 
 	init: function () {
 		//get the form
@@ -55,14 +60,20 @@ var Mailnaut = {
 	},
 
 	setupVendorControls: function() {
+		Mailnaut.displayVendorRemove();
 		$('.add-vendor').click(function(e){
 			e.preventDefault();
-			$('.vendor-list').append(Mailnaut.vendorTemplate);
+			$.get('/vendor', function(data){
+				$('.vendor-list').append(data);
+				Mailnaut.displayVendorRemove();
+			});
+			
 		});
 
 		$('.vendor-list').on('click', '.remove-vendor', function(e){
 			e.preventDefault();
 			$(this).parent().remove();
+			Mailnaut.displayVendorRemove();
 		});
 	}
 }
