@@ -16,7 +16,7 @@ html
 					fieldset
 						input(type="file", name="htmlUpload", value="Upload HTML File").file-upload
 
-						input(type="submit", value="Generate Plaintext Version").launch
+						button(type="submit").launch Launch
 
 						if (output)
 							label(for="output") Plaintext Output:
@@ -28,3 +28,4 @@ html
 					li Upload HTML File
 					li MailNaut will remove all HTML and create a plaintext version
 					li Download your .txt file
+		include includes/footer

@@ -14,7 +14,7 @@ html
 				h2 Insert UTM Values
 				form(action="/utm/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="utm")
 					fieldset
-						input(type="file", value="Upload HTML File").file-upload
+						input(type="file", name="htmlUpload" value="Upload HTML File").file-upload
 						h3 Specify vendors
 						div.vendor-list
 							include includes/vendor
@@ -32,3 +32,4 @@ html
 						p If you wish to use a custom subject line for any vendor, please provide. Otherwise, the default will be used (MailNaut will use the HTML file's title attribute as the subject by default.)
 					li MailNaut will update all of the links according to your vendor specifications
 					li MailNaut will create a downloadable zip of the updated templates and their respective text versions
+		include includes/footer

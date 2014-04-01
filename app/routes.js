@@ -1,102 +1,44 @@
-var fs         = require('fs');
-var path       = require('path');	
-var cheerio    = require('cheerio');	
-var mkdirp     = require('mkdirp');
-var htmlToText = require('html-to-text');
-var zipstream  = require('zipstream');
-
-
-//Extend arrays so we can remove empty values
-Array.prototype.clean = function(deleteValue) {
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] == deleteValue) {         
-      this.splice(i, 1);
-      i--;
-    }
-  }
-  return this;
-};
+// Require MailNaut Base Class
+var MailNaut   = require('./controllers/MailNautController');
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
 
 	// api ---------------------------------------------------------------------
 	app.post('/linkcheck/generate', function(req, res){
-		//console.log(req.files.htmlUpload);
-
-		//Read the uploaded file
-		fs.readFile(req.files.htmlUpload.path, function (err, data) {
-			//load cheerio
-		    var $ = cheerio.load(data);
-		    // Get the title of the email
-		    var links = [];
-		    var href  = "";
-		    var text  = "";
-		    //walk over all the links and put their HREFs in line 
-		    $('a').each(function(){
-		    	// get the link and the text
-		    	href = $(this).attr('href');
-		    	text = $(this).text();
-
-		    	//we do NOT want to exlude empty href values as we want to see if we missed configuring one
-		    	links.push('['+href+'] '+ text);
-		    	
-		    });
-
-		    //clean up any empty elements in the array
-		    links.clean(undefined);
-		    links.clean('');
-		   
-		   	//format the output
-		   	var output = links.join("\r\n");
-
-		   	//TODO: Add check to see if mobile viewport tag is included
-		   	//TODO: Add check to see if the style tag is in the head or body
-
-		    //write the output
-		    res.render('linkcheck', {title: 'Review Links', output: output});
+		MailNaut.generateReview(req, function (err, output) {
+			if (!err) {
+				//write the output
+		    	res.render('linkcheck', {title: 'Review Links', output: output});
+			} else {
+				//render error template
+				res.render('error', {error: err});
+			}
+			
 		});
 	});
 
 	app.post('/plaintext/generate', function(req, res){
-
-		//Read the uploaded file
-		fs.readFile(req.files.htmlUpload.path, function (err, data) {
-			//load cheerio
-		    var $ = cheerio.load(data);
-		    // Get the title of the email
-		    var subject = $('title').text();
-		    var href    = '';
-		    //walk over all the links and put their HREFs in line 
-		    $('a').each(function(){
-		    	href = $(this).attr('href');
-		    	if (href != '') {
-		    		$(this).text($(this).text() + ' ['+href+']');
-		    	} else {
-		    		$(this).text($(this).text() + ' [MISSING-LINK]');
-		    	}
-		    });
-
-		    //get the final body copy after links have been prepared
-		  	var body    = $('body').html();
-
-		  	//convert to plain text
-		  	var output = htmlToText.fromString(body);
-
-		    //write the output
-		    res.render('plaintext', {title: 'Plaintext Generated', output: output});
+		MailNaut.generatePlaintext(req, function (err, output) {
+			if (!err) {
+				//write the output
+		    	res.render('plaintext', {title: 'Plaintext Generated', output: output});
+		    } else {
+				//render error template
+				res.render('error', {error: err});
+			}
 		});
 	});
 
 	app.post('/utm/generate', function(req, res){
-
-		//Read the uploaded file
-		fs.readFile(req.files.htmlUpload.path, function (err, data) {
-			
-		  	
-
-		    //write the output
-		    //res.render('plaintext', {title: 'Plaintext Generated', output: output});
+		MailNaut.generateUTM(req, function (err, output) {
+			if (!err) {
+				//write the output
+		    	res.render('utm', {title: 'UTM Generated', output: output});
+	    	} else {
+				//render error template
+				res.render('error', {error: err});
+			}
 		});
 	});
 

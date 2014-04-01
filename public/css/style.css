@@ -17,6 +17,16 @@ fieldset {
 	padding: 0;
 }
 
+footer {
+	background: #107d74;
+	margin: 4em 0 0 0;
+	padding: 2em 0;
+}
+
+footer p {
+	color: #FFF;
+}
+
 h1,
 h2,
 h3 {

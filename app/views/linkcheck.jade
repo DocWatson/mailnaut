@@ -16,7 +16,7 @@ html
 					fieldset
 						input(type="file", name="htmlUpload", value="Upload HTML File").file-upload
 
-						input(type="submit", value="Launch Link Check").launch
+						button(type="submit").launch Launch
 
 						if (output)
 							label(for="link-list") Links Discovered:
@@ -30,3 +30,4 @@ html
 					li MailNaut will parse the file and look for links
 					li After reading the file, MailNaut will show you the links so you can easily review them.
 					li The links are displayed with the text they accompany
+		include includes/footer

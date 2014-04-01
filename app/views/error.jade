@@ -1,0 +1,19 @@
+doctype html
+html
+	head
+		title #{title} | MailNaut
+		link(rel='stylesheet', href='/css/fontello.css')
+		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
+		link(rel='stylesheet', href='/css/style.css')
+	body
+		include includes/header
+		section.wrapper
+			.left-col
+				h2 MAYDAY!
+				p Your request produced an error. The output is listed below.
+
+				pre {#error}
+
+				p
+					a(href="https://github.com/DocWatson/mailnaut/issues") Report it on GitHub
+		include includes/footer
