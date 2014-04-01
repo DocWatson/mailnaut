@@ -1,8 +1,8 @@
 {
   "name": "mailnaut",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "description": "A small web app to make managing Email Marketing a little easier",
-  "main": "mailnaut.js",
+  "main": "server.js",
   "author": "Beau Watson <DocWatson>",
   "dependencies": {
     "cheerio": "latest",

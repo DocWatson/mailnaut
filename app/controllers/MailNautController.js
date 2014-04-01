@@ -8,20 +8,13 @@
 
 // Dependencies
 var fs         = require('fs');
-var path       = require('path');	
 var cheerio    = require('cheerio');	
-var mkdirp     = require('mkdirp');
 var htmlToText = require('html-to-text');
 var zipstream  = require('zipstream');
+var config     = require('../config');
 
-var writePath = path.join(__dirname + '/output/');
-
-//make the writePath work
-mkdirp(writePath, function(err) { 
-    if(err){
-    	console.log('Could not write to path: '+writePath);
-    }
-});
+//make sure the write path exists
+config.makeWritePath();
 
 //Extend arrays so we can remove empty values
 Array.prototype.clean = function(deleteValue) {
@@ -34,6 +27,7 @@ Array.prototype.clean = function(deleteValue) {
   return this;
 };
 
+// expose the controller to the app with module.exports
 module.exports = { 
 	/**
 	 * generatePlaintext 
@@ -180,14 +174,19 @@ module.exports = {
 						$(this).attr('href',href);
 					});
 
-					console.log('Preparing File write to: '+ writePath + source + '.html');
-					fs.writeFile(writePath + source + '.html', $.html(), function(err){
+					console.log('Preparing File write to: '+ config.writePath + source + '.html');
+
+					// TODO: cleanup file output
+					fs.writeFile(config.writePath + source + '.html', $.html(), function(err){
 		                if(!err){
 		                    console.log('File successfully written!');
 		                } else {
 		                    console.log('ERROR with file: ');
 		                }
 			        });
+
+					// TODO: make text version of each file
+			        // TODO: compress all the files to a zip when done
 				}
 
 				var output = $.html();
