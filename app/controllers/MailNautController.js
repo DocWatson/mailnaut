@@ -144,15 +144,17 @@ module.exports = {
 			    var default_campaign = subject.replace(/\s+/g, '-');
 			    var utm_string       = '?utm_medium=email';
 			    var source           = '';
-			    console.log('Pre loop');
-			    //Loop through all the vendors and build out the utm string
-				for(var i=0; i < req.body.vendor_name[0].length; i++) {
-					console.log('Looping' + i);
-					source = req.body.vendor_name[0][i].toString().toLowerCase();
+
+			    //convert the submitted vendor object to a usable array
+			    var vendors = Array.prototype.slice.call(req.body.vendors);
+
+			    //loop through the vendors
+			    vendors.forEach(function(vendor){
+			    	source = vendor.name.toString().toLowerCase();
 
 					//if we have a custom subject line for this vendor, use it; otherwise, use default
-					if (req.body.vendor_subject[0][i] !== '' && req.body.vendor_subject[0][i] !== undefined) {
-						campaign = req.body.vendor_subject[0][i].replace(/\s+/g, '-');
+					if (vendor.subject !== '' && vendor.subject !== undefined) {
+						campaign = vendor.subject.replace(/\s+/g, '-');
 					} else {
 						campaign = default_campaign;
 					}
@@ -160,19 +162,16 @@ module.exports = {
 					//smash it all together
 					utm_string = utm_string + '&utm_source=' + source + '&utm_campaign='+campaign;
 
-					console.log(utm_string);
+					//reload cheerio (attempt to remove dupe HREFs)
+					$ = cheerio.load(data);
 
-					//loop through all the links
-					$('a').each(function() {
-						//get the HREF
-						href = $(this).attr('href');
-
-						//append the UTM string and set the content
-						href = href + utm_string + '&utm_content=' + href;
-
-						//reset the href
-						$(this).attr('href',href);
+					//insert the UTM string for each HREF
+					// TO DO: prevent this from duplicating values..hmmm
+					$('a').each(function(){
+						var href = $(this).attr("href"); 
+						$(this).attr('href', href + utm_string + '&utm_content=' + href);
 					});
+					
 
 					console.log('Preparing File write to: '+ config.writePath + source + '.html');
 
@@ -185,13 +184,19 @@ module.exports = {
 		                }
 			        });
 
-					// TODO: make text version of each file
-			        // TODO: compress all the files to a zip when done
-				}
+			        var output  = htmlToText.fromString($.html());
 
-				var output = $.html();
+			        fs.writeFile(config.writePath + source + '.txt', output, function(err){
+		                if(!err){
+		                    console.log('File successfully written!');
+		                } else {
+		                    console.log('ERROR with file: ');
+		                }
+			        });
+			    });
+			    
 
-				callback(err,output);
+				callback(err,'');
 			}
 		});
 	}

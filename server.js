@@ -2,9 +2,8 @@
   var express  = require('express');
   var app      = express();                     // create our app w/ express
   var port     = process.env.PORT || 8080;      // set the port
-  var server = require('http').createServer(app);
-
-  var jade = require('jade');
+  var server   = require('http').createServer(app);
+  var jade     = require('jade');
 
   app.configure(function() {
     app.use(express.static(__dirname + '/public'));     // set the static files location /public/img will be /img for users

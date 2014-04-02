@@ -1,9 +1,15 @@
 div.vendor
 	label Vendor Name
 		br
-		input(type="text", placeholder="Vendor Name", name="vendor_name[]")
+		if (num)
+			input(type="text", placeholder="Vendor Name", name="vendors[#{num}][name]")
+		else
+			input(type="text", placeholder="Vendor Name", name="vendors[0][name]")
 	label Subject line
 		br
-		input(type="text", placeholder="Enter a subject line specific to this vendor", name="vendor_subject[]")
+		if (num)
+			input(type="text", placeholder="Enter a subject line specific to this vendor", name="vendors[#{num}][subject]")
+		else
+			input(type="text", placeholder="Vendor Name", name="vendors[0][subject]")
 	a(href="#").remove-vendor
 		i.icon-cancel-circled2 remove

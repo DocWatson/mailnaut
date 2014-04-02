@@ -63,7 +63,10 @@ var Mailnaut = {
 		Mailnaut.displayVendorRemove();
 		$('.add-vendor').click(function(e){
 			e.preventDefault();
-			$.get('/vendor', function(data){
+
+			//set the next index of the vendor array here (jade will insert into the template)
+			var nextIndex = $('.vendor').length;
+			$.get('/vendor', {num: nextIndex}, function(data){
 				$('.vendor-list').append(data);
 				Mailnaut.displayVendorRemove();
 			});

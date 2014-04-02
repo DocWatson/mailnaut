@@ -64,7 +64,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/vendor', function(req, res) {
-		res.render('includes/vendor');
+		res.render('includes/vendor', {num : req.query.num});
 	});
 
 	// All other requests, send 404
