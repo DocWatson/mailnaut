@@ -15,6 +15,12 @@ html
 				form(action="/utm/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="utm")
 					fieldset
 						input(type="file", name="htmlUpload" value="Upload HTML File").file-upload
+						
+						label
+							input(type="checkbox", name="noZip", value="true")
+							| Do not zip output files
+
+
 						h3 Specify vendors
 						div.vendor-list
 							include includes/vendor

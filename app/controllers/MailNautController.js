@@ -10,7 +10,7 @@
 var fs         = require('fs');
 var cheerio    = require('cheerio');	
 var htmlToText = require('html-to-text');
-var zipstream  = require('zipstream');
+var packer     = require('zip-stream');
 var config     = require('../config');
 
 //make sure the write path exists
@@ -130,6 +130,13 @@ module.exports = {
 	 * @return {Void}            
 	 */
 	generateUTM : function (req, callback) {
+		//default: zip the output up
+		var zip = true;
+
+		//if the user has opted not to zip, set it here
+		if (req.body.noZip) {
+			zip = false;
+		}
 		//Read the uploaded file
 		fs.readFile(req.files.htmlUpload.path, function (err, data) {
 			if (err) {
@@ -142,7 +149,7 @@ module.exports = {
 			    
 			    var campaign         = '';
 			    var default_campaign = subject.replace(/\s+/g, '-');
-			    var utm_string       = '?utm_medium=email';
+			    var utm_medium       = '?utm_medium=email';
 			    var source           = '';
 
 			    //convert the submitted vendor object to a usable array
@@ -150,7 +157,7 @@ module.exports = {
 
 			    //loop through the vendors
 			    vendors.forEach(function(vendor){
-			    	source = vendor.name.toString().toLowerCase();
+			    	source = vendor.name.toString().toLowerCase().replace(/\s+/g, '-');
 
 					//if we have a custom subject line for this vendor, use it; otherwise, use default
 					if (vendor.subject !== '' && vendor.subject !== undefined) {
@@ -160,10 +167,10 @@ module.exports = {
 					}
 
 					//smash it all together
-					utm_string = utm_string + '&utm_source=' + source + '&utm_campaign='+campaign;
+					var utm_string = utm_medium + '&utm_source=' + source + '&utm_campaign='+campaign;
 
 					//reload cheerio (attempt to remove dupe HREFs)
-					$ = cheerio.load(data);
+					var $ = cheerio.load(data);
 
 					//insert the UTM string for each HREF
 					// TO DO: prevent this from duplicating values..hmmm
@@ -172,31 +179,58 @@ module.exports = {
 						$(this).attr('href', href + utm_string + '&utm_content=' + href);
 					});
 					
+					var text_version  = htmlToText.fromString($.html());
 
 					console.log('Preparing File write to: '+ config.writePath + source + '.html');
 
-					// TODO: cleanup file output
-					fs.writeFile(config.writePath + source + '.html', $.html(), function(err){
-		                if(!err){
-		                    console.log('File successfully written!');
-		                } else {
-		                    console.log('ERROR with file: ');
-		                }
-			        });
 
-			        var output  = htmlToText.fromString($.html());
+					// if the user has elected to not zip the files, simply output them
+					if(!zip) {
+						//write the HTML version using Cheerio's DOM
+						fs.writeFile(config.writePath + source + '.html', $.html(), function(err){
+			                if(!err){
+			                    console.log('File successfully written!');
+			                } else {
+			                    console.log('ERROR with file: ' + source + '.html');
+			                    console.log('ERROR output: '+ err);
+			                }
+				        });
 
-			        fs.writeFile(config.writePath + source + '.txt', output, function(err){
-		                if(!err){
-		                    console.log('File successfully written!');
-		                } else {
-		                    console.log('ERROR with file: ');
-		                }
-			        });
+						// write the text version using html-to-string on Cheerio's DOM
+				        fs.writeFile(config.writePath + source + '.txt', text_version, function(err){
+			                if(!err){
+			                    console.log('File successfully written!');
+			                } else {
+			                    console.log('ERROR with file: ' + source + '.text');
+			                    console.log('ERROR output: '+ err);
+			                }
+				        });
+					} else {
+						//create an output stream and archiver
+						var out     = fs.createWriteStream(config.writePath + source + '.zip');
+						var archive = new packer(); 
+
+						//pipe the output into the archiver
+						archive.pipe(out);
+
+						// prepare archiver 
+						archive.on('error', function(err) {
+						  throw err;
+						});
+
+						//add the html and text versions to an output zip of the same name
+					    archive.entry(text_version, { name: source + '.txt' }, function(err, entry) {
+						  	if (err) throw err;
+						  	archive.entry($.html(), { name: source + '.html' }, function(err, entry) {
+						    	if (err) throw err;
+						    	archive.finalize();
+						  	});
+						});
+					}
 			    });
-			    
-
-				callback(err,'');
+				
+				// TODO: provide download links on the callback page
+				callback(err,vendors);
 			}
 		});
 	}
