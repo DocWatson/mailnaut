@@ -1,6 +1,6 @@
 {
   "name"        : "mailnaut",
-  "version"     : "0.0.5",
+  "version"     : "0.0.6",
   "description" : "A small web app to make managing Email Marketing a little easier",
   "main"        : "server.js",
   "author"      : "Beau Watson <DocWatson>",
