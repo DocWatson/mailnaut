@@ -9,7 +9,7 @@ module.exports = function(app) {
 		MailNaut.generateReview(req, function (err, output) {
 			if (!err) {
 				//write the output
-		    	res.render('linkcheck', {title: 'Review Links', output: output});
+		    	res.render('linkcheck', {title: 'Review Links', section : 'linkcheck', output: output});
 			} else {
 				//render error template
 				res.render('error', {error: err});
@@ -22,7 +22,7 @@ module.exports = function(app) {
 		MailNaut.generatePlaintext(req, function (err, output) {
 			if (!err) {
 				//write the output
-		    	res.render('plaintext', {title: 'Plaintext Generated', output: output});
+		    	res.render('plaintext', {title: 'Plaintext Generated', section : 'plaintext', output: output});
 		    } else {
 				//render error template
 				res.render('error', {error: err});
@@ -34,7 +34,7 @@ module.exports = function(app) {
 		MailNaut.generateUTM(req, function (err, output) {
 			if (!err) {
 				//write the output
-		    	res.render('utm', {title: 'UTM Generated', output: output});
+		    	res.render('utm', {title: 'UTM Generated', section : 'utm', output: output});
 	    	} else {
 				//render error template
 				res.render('error', {error: err});
@@ -46,6 +46,11 @@ module.exports = function(app) {
 	// Render Index View
 	app.get('/', function(req, res) {
 		res.render('index', { title : 'Welcome', section : 'main' } ); 
+	});
+
+	app.get('/downloads/*',function(req, res){
+		//give it the URL to determine the file to download, and response object to pipe it out
+		MailNaut.getZipDownload(req.url, res);
 	});
 
 	// Render Plaintext Generator View

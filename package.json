@@ -1,17 +1,18 @@
 {
   "name"        : "mailnaut",
-  "version"     : "0.0.6",
+  "version"     : "0.0.7",
   "description" : "A small web app to make managing Email Marketing a little easier",
   "main"        : "server.js",
   "author"      : "Beau Watson <DocWatson>",
   "repository"  : "https://github.com/DocWatson/mailnaut",
   "dependencies": {
     "cheerio"            : "latest",
-    "express"            : "latest",
-    "mkdirp"             : "latest",
-    "jade"               : "latest",
-    "html-to-text"       : "0.0.8",
     "connect-multiparty" : "^1.0.3",
+    "express"            : "latest",
+    "html-to-text"       : "0.0.8",
+    "jade"               : "latest",
+    "mime"               : "^1.2.11",
+    "mkdirp"             : "latest",
     "zip-stream"         : "^0.3.0"
   }
 }

@@ -1,31 +1,19 @@
-doctype html
-html
-	head
-		title #{title} | MailNaut
-		link(rel='stylesheet', href='/css/fontello.css')
-		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
-		link(rel='stylesheet', href='/css/style.css')
-		script(type='text/javascript' src='/bower_components/jquery/dist/jquery.min.js')
-		script(type='text/javascript', src='/js/scripts.js')
-	body
-		include includes/header
-		section.wrapper
-			.left-col
-				h2 Create Plaintext Version
-				form(action="/plaintext/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="plaintext")
-					fieldset
-						input(type="file", name="htmlUpload", value="Upload HTML File").file-upload
+include template/page
+	.left-col
+		h2 Create Plaintext Version
+		form(action="/plaintext/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="plaintext")
+			fieldset
+				input(type="file", name="htmlUpload", value="Upload HTML File").file-upload
 
-						button(type="submit").launch Launch
+				button(type="submit").launch Launch
 
-						if (output)
-							label(for="output") Plaintext Output:
-							textarea(rows=50, cols=75)#output #{output}
+				if (output)
+					label(for="output") Plaintext Output:
+					textarea(rows=50, cols=75)#output #{output}
 
-			.right-col
-				h3 How to Use
-				ol
-					li Upload HTML File
-					li MailNaut will remove all HTML and create a plaintext version
-					li Download your .txt file
-		include includes/footer
+	.right-col
+		h3 How to Use
+		ol
+			li Upload HTML File
+			li MailNaut will remove all HTML and create a plaintext version
+			li Download your .txt file

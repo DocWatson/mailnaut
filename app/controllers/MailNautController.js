@@ -10,6 +10,7 @@
 var fs         = require('fs');
 var cheerio    = require('cheerio');	
 var htmlToText = require('html-to-text');
+var mime       = require('mime');
 var packer     = require('zip-stream');
 var config     = require('../config');
 
@@ -121,7 +122,7 @@ module.exports = {
 	},
 
 	/**
-	 * generateUTM description
+	 * generateUTM
 	 * function to parse the uploaded HTML file and insert UTM codes based on specified vendors
 	 *   outputs a zip archive of all of the files
 	 *   
@@ -233,6 +234,33 @@ module.exports = {
 				callback(err,vendors);
 			}
 		});
+	},
+
+	/**
+	 * getZipDownload 
+	 * function to read a URL path, then serve up the download
+	 * 
+	 * @param  {String} path - the download request path
+	 * @param  {Object} res  - express's response object so we can write the file out
+	 * @return {File}   streams the zip file
+	 */
+	getZipDownload : function(path,res) {
+		//get the zip file's name
+		var downloadFile     = path.substr(path.lastIndexOf('/') + 1);
+		var downloadFilePath = config.writePath + downloadFile;
+
+		//figure out mimetype
+		var mimetype = mime.lookup(downloadFilePath);
+		
+		//set headers to pipe out the file
+		res.setHeader('Content-disposition', 'attachment; filename=' + downloadFile);
+  		res.setHeader('Content-type', mimetype);
+
+  		//create a file stream
+  		var filestream = fs.createReadStream(downloadFilePath);
+
+  		//pipe it into the response to force download
+  		filestream.pipe(res);
 	}
 
 }

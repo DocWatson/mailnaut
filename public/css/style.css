@@ -55,14 +55,27 @@ header {
 
 header h1 {
 	color: #FFF;
+	display: inline-block;
+}
+
+header.home h1 {
+	color: #FFF;
+	display: block;
 	font-size: 5em;
 	margin: 0;
 	text-align: center;
 }
 
-header img {
+header.home img {
+	float: none;
 	display: block;
 	margin: 0 auto;
+	width: 198px;
+}
+
+header img {
+	float: left;
+	width: 60px;
 }
 
 i {
@@ -80,9 +93,14 @@ label {
 	display: block;
 }
 
+main {
+	min-height: 100%;
+}
+
 nav {
 	background: #107d74;
 	text-align: right;
+	margin: 0 0 1em 0;
 	padding: 1em;
 }
 
@@ -90,6 +108,25 @@ nav a {
 	color: #FFF;
 	display: inline-block;
 	margin: 0 1em;
+}
+
+nav a.here,
+footer a {
+	color: #f4f69f;
+}
+
+nav.main {
+	background: none;
+	display: inline-block;
+	margin-left: 4em;
+	padding: 0;
+	position: relative;
+	top: -.3em;
+	text-align: left;
+}
+
+nav.main .section {
+	display: inline-block;
 }
 
 .cols-3 {
@@ -107,13 +144,34 @@ nav a {
 	color: #FFF;
 }
 
-.cols-3 div a:hover {
+.cols-3 div a:hover,
+nav.main a:hover {
 	color: #107d74;
 }
 
 .cols-3 div i {
 	display: block;
 	font-size: 5em;
+}
+
+.downloads {
+	background: #f4f69f;
+	border: 2px solid #f6ed6d;
+	margin: 1em 0;
+	padding: .5em 1em;
+}
+
+.downloads a {
+	color: #139489;
+}
+
+.downloads a:hover {
+	color: #04373d;
+}
+
+.downloads p {
+	margin: 0;
+	padding: 0;
 }
 
 .launch {
@@ -179,7 +237,8 @@ nav a {
 		border-right: 1px solid #999;
 		display: inline-block;
 		padding-right: 5%;
-		margin-right: 4.8%;
+		margin: 2em 4.8% 0 0;
+		min-height: 500px;
 		vertical-align: top;
 		width: 60%;
 	}

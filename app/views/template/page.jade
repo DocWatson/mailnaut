@@ -1,0 +1,50 @@
+doctype html
+html
+	head
+		title #{title} | MailNaut
+		link(rel='stylesheet', href='/css/fontello.css')
+		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
+		link(rel='stylesheet', href='/css/style.css')
+	body
+		header
+			nav
+				.wrapper
+					a(href="/").icon-home About
+					a(href="https://github.com/DocWatson/mailnaut").icon-github View on Github
+			.wrapper
+				img(src="/images/logo.png", alt="MailNaut Loves You")
+				h1 MailNaut
+				nav.main
+					div.section
+						if section == 'plaintext'
+							a(href="/plaintext").here
+								i.icon-doc-text-inv
+								span Generate Text Version
+						else
+							a(href="/plaintext")
+								i.icon-doc-text-inv
+								span Generate Text Version
+					div.section
+						if section == 'utm'
+							a(href="/utm").here
+								i.icon-rocket
+								span Insert UTM Values
+						else
+							a(href="/utm")
+								i.icon-rocket
+								span Insert UTM Values
+					div.section
+						if section == 'linkcheck'
+							a(href="/linkcheck").here
+								i.icon-ok
+								span Check Links
+						else
+							a(href="/linkcheck")
+								i.icon-ok
+								span Check Links
+		main.wrapper
+			yield
+
+		include ../includes/footer
+
+

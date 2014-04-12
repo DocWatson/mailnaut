@@ -11,7 +11,8 @@ var mkdirp     = require('mkdirp');
 
 // expose the config to our app with module.exports
 module.exports = {
-	//the path to write files too
+	// the path to write files to
+	// NOTE: an ExpressJS route `downloads` will use this path to help download files
 	writePath : path.join(__dirname + '/output/'),
 
 	/**

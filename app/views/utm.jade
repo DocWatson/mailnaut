@@ -1,41 +1,38 @@
-doctype html
-html
-	head
-		title #{title} | MailNaut
-		link(rel='stylesheet', href='/css/fontello.css')
-		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
-		link(rel='stylesheet', href='/css/style.css')
-		script(type='text/javascript' src='/bower_components/jquery/dist/jquery.min.js')
-		script(type='text/javascript', src='/js/scripts.js')
-	body
-		include includes/header
-		section.wrapper
-			.left-col
-				h2 Insert UTM Values
-				form(action="/utm/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="utm")
-					fieldset
-						input(type="file", name="htmlUpload" value="Upload HTML File").file-upload
-						
-						label
-							input(type="checkbox", name="noZip", value="true")
-							| Do not zip output files
+include template/page
+	.left-col
+		
+		if (output) 
+			div.downloads
+				p Your downloads are ready!
+
+				ul
+				each vendor in output
+					li
+						a(href='/downloads/'+vendor.name.toString().toLowerCase().replace(/\s+/g, '-')+ ".zip")= vendor.name.toString().toLowerCase().replace(/\s+/g, '-')
+		h2 Insert UTM Values
+		form(action="/utm/generate", method="post", enctype="multipart/form-data",name="mailnautForm", rel="utm")
+			fieldset
+				input(type="file", name="htmlUpload" value="Upload HTML File").file-upload
+				
+				label
+					input(type="checkbox", name="noZip", value="true")
+					| Do not zip output files
 
 
-						h3 Specify vendors
-						div.vendor-list
-							include includes/vendor
-						button.add-vendor Add Another Vendor
+				h3 Specify vendors
+				div.vendor-list
+					include includes/vendor
+				button.add-vendor Add Another Vendor
 
 
-						button(type="submit").launch Launch
+				button(type="submit").launch Launch
 
 
-			.right-col
-				h3 How to Use
-				ol
-					li Upload HTML File
-					li Specify your vendors
-						p If you wish to use a custom subject line for any vendor, please provide. Otherwise, the default will be used (MailNaut will use the HTML file's title attribute as the subject by default.)
-					li MailNaut will update all of the links according to your vendor specifications
-					li MailNaut will create a downloadable zip of the updated templates and their respective text versions
-		include includes/footer
+	.right-col
+		h3 How to Use
+		ol
+			li Upload HTML File
+			li Specify your vendors
+				p If you wish to use a custom subject line for any vendor, please provide. Otherwise, the default will be used (MailNaut will use the HTML file's title attribute as the subject by default.)
+			li MailNaut will update all of the links according to your vendor specifications
+			li MailNaut will create a downloadable zip of the updated templates and their respective text versions
